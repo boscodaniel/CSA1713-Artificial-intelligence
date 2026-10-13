@@ -1,0 +1,81 @@
+
+import heapq
+
+def heuristic(state, goal):
+    distance = 0
+    for i in range(9):
+        if state[i] != 0:
+            goal_pos = goal.index(state[i])
+            distance += abs(i // 3 - goal_pos // 3)
+            distance += abs(i % 3 - goal_pos % 3)
+    return distance
+
+def get_neighbors(state):
+    neighbors = []
+    zero = state.index(0)
+    moves = [-3, 3, -1, 1]
+
+    for move in moves:
+        new_pos = zero + move
+
+        if 0 <= new_pos < 9:
+            if move == -1 and zero % 3 == 0:
+                continue
+            if move == 1 and zero % 3 == 2:
+                continue
+
+            new_state = list(state)
+            new_state[zero], new_state[new_pos] = (
+                new_state[new_pos], new_state[zero]
+            )
+            neighbors.append(tuple(new_state))
+
+    return neighbors
+
+def solve_puzzle(start, goal):
+    priority_queue = []
+    heapq.heappush(
+        priority_queue,
+        (heuristic(start, goal), 0, start, [start])
+    )
+
+    visited = set()
+
+    while priority_queue:
+        f, g, state, path = heapq.heappop(priority_queue)
+
+        if state == goal:
+            print("Solution found!")
+            for step, board in enumerate(path):
+                print("\nStep", step)
+                for i in range(0, 9, 3):
+                    print(board[i:i+3])
+            print("\nTotal moves:", len(path) - 1)
+            return
+
+        if state in visited:
+            continue
+
+        visited.add(state)
+
+        for neighbor in get_neighbors(state):
+            if neighbor not in visited:
+                new_g = g + 1
+                new_f = new_g + heuristic(neighbor, goal)
+
+                heapq.heappush(
+                    priority_queue,
+                    (new_f, new_g, neighbor, path + [neighbor])
+                )
+
+    print("No solution exists.")
+
+start = (1, 2, 3,
+         4, 0, 6,
+         7, 5, 8)
+
+goal = (1, 2, 3,
+        4, 5, 6,
+        7, 8, 0)
+
+solve_puzzle(start, goal)
