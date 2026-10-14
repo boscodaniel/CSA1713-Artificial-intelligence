@@ -1,0 +1,39 @@
+def dfs(graph, start, goal):
+    # Stack stores (current_node, path_to_node)
+    stack = [(start, [start])]
+    visited = set([start])
+    
+    while stack:
+        node, path = stack.pop()
+        
+        # Goal check
+        if node == goal:
+            return path
+        
+        # Explore neighbors
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                stack.append((neighbor, path + [neighbor]))
+    
+    return None
+
+# Example graph (adjacency list)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+# Run DFS
+start_node = 'A'
+goal_node = 'F'
+path = dfs(graph, start_node, goal_node)
+
+if path:
+    print("DFS Path:", " -> ".join(path))
+else:
+    print("No path found!")
