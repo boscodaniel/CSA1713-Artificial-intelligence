@@ -1,0 +1,44 @@
+import itertools
+
+def travelling_salesman_problem(graph, start):
+    # graph is a dictionary with city names as keys and dict of neighbors with distances
+    cities = list(graph.keys())
+    cities.remove(start)
+    
+    min_path = None
+    min_cost = float('inf')
+    
+    # Try all permutations of cities
+    for perm in itertools.permutations(cities):
+        current_cost = 0
+        current_city = start
+        
+        # Travel through permutation
+        for next_city in perm:
+            current_cost += graph[current_city][next_city]
+            current_city = next_city
+        
+        # Return to start
+        current_cost += graph[current_city][start]
+        
+        # Check if this path is better
+        if current_cost < min_cost:
+            min_cost = current_cost
+            min_path = (start,) + perm + (start,)
+    
+    return min_path, min_cost
+
+# Example graph (distance matrix)
+graph = {
+    'A': {'B': 10, 'C': 15, 'D': 20},
+    'B': {'A': 10, 'C': 35, 'D': 25},
+    'C': {'A': 15, 'B': 35, 'D': 30},
+    'D': {'A': 20, 'B': 25, 'C': 30}
+}
+
+# Run TSP
+start_city = 'A'
+path, cost = travelling_salesman_problem(graph, start_city)
+
+print("Optimal Path:", " -> ".join(path))
+print("Minimum Cost:", cost)
