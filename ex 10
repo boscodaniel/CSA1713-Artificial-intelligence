@@ -1,0 +1,73 @@
+import heapq
+
+class Node:
+    def __init__(self, name, g=0, h=0, parent=None):
+        self.name = name
+        self.g = g  # cost from start
+        self.h = h  # heuristic estimate to goal
+        self.f = g + h  # total cost
+        self.parent = parent
+    
+    def __lt__(self, other):
+        return self.f < other.f
+
+def astar(graph, heuristics, start, goal):
+    open_list = []
+    closed_set = set()
+    
+    start_node = Node(start, g=0, h=heuristics[start])
+    heapq.heappush(open_list, start_node)
+    
+    while open_list:
+        current = heapq.heappop(open_list)
+        
+        if current.name == goal:
+            # Reconstruct path
+            path = []
+            while current:
+                path.append(current.name)
+                current = current.parent
+            return path[::-1]
+        
+        closed_set.add(current.name)
+        
+        for neighbor, cost in graph[current.name].items():
+            if neighbor in closed_set:
+                continue
+            
+            g = current.g + cost
+            h = heuristics[neighbor]
+            neighbor_node = Node(neighbor, g, h, current)
+            
+            # Check if neighbor already in open_list with lower f
+            skip = False
+            for node in open_list:
+                if node.name == neighbor and node.f <= neighbor_node.f:
+                    skip = True
+                    break
+            if not skip:
+                heapq.heappush(open_list, neighbor_node)
+    
+    return None
+
+# Example graph (weighted adjacency list)
+graph = {
+    'A': {'B': 1, 'C': 3},
+    'B': {'A': 1, 'C': 1, 'D': 6},
+    'C': {'A': 3, 'B': 1, 'D': 2},
+    'D': {'B': 6, 'C': 2}
+}
+
+# Example heuristic values (straight-line estimates to goal 'D')
+heuristics = {
+    'A': 7,
+    'B': 6,
+    'C': 2,
+    'D': 0
+}
+
+# Run A* from A to D
+path = astar(graph, heuristics, 'A', 'D')
+
+if path:
+    print("Optimal
