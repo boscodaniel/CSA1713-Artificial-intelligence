@@ -1,0 +1,41 @@
+from collections import deque
+
+def bfs(graph, start, goal):
+    # Queue stores (current_node, path_to_node)
+    queue = deque([(start, [start])])
+    visited = set([start])
+    
+    while queue:
+        node, path = queue.popleft()
+        
+        # Goal check
+        if node == goal:
+            return path
+        
+        # Explore neighbors
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, path + [neighbor]))
+    
+    return None
+
+# Example graph (adjacency list)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+# Run BFS
+start_node = 'A'
+goal_node = 'F'
+path = bfs(graph, start_node, goal_node)
+
+if path:
+    print("Shortest Path:", " -> ".join(path))
+else:
+    print("No path found!")
