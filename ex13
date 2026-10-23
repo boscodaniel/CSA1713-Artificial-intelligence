@@ -1,0 +1,104 @@
+
+# Minimax Algorithm for Tic Tac Toe
+
+board = [' '] * 9
+
+def display():
+    for i in range(0, 9, 3):
+        print(" | ".join(board[i:i+3]))
+        if i < 6:
+            print("--+---+--")
+
+def winner():
+    wins = [
+        (0,1,2), (3,4,5), (6,7,8),
+        (0,3,6), (1,4,7), (2,5,8),
+        (0,4,8), (2,4,6)
+    ]
+
+    for a, b, c in wins:
+        if board[a] == board[b] == board[c] != ' ':
+            return board[a]
+    return None
+
+def minimax(is_max):
+    result = winner()
+
+    if result == 'O':
+        return 1
+    if result == 'X':
+        return -1
+    if ' ' not in board:
+        return 0
+
+    if is_max:
+        best = -float('inf')
+        for i in range(9):
+            if board[i] == ' ':
+                board[i] = 'O'
+                best = max(best, minimax(False))
+                board[i] = ' '
+        return best
+    else:
+        best = float('inf')
+        for i in range(9):
+            if board[i] == ' ':
+                board[i] = 'X'
+                best = min(best, minimax(True))
+                board[i] = ' '
+        return best
+
+def best_move():
+    best_score = -float('inf')
+    move = None
+
+    for i in range(9):
+        if board[i] == ' ':
+            board[i] = 'O'
+            score = minimax(False)
+            board[i] = ' '
+
+            if score > best_score:
+                best_score = score
+                move = i
+
+    return move
+
+# Main game
+while True:
+    display()
+    try:
+        pos = int(input("Enter your move (1-9): ")) - 1
+    except ValueError:
+        print("Enter a number from 1 to 9.")
+        continue
+
+    if pos < 0 or pos > 8 or board[pos] != ' ':
+        print("Invalid move! Try again.")
+        continue
+
+    board[pos] = 'X'
+
+    if winner() == 'X':
+        display()
+        print("You win!")
+        break
+
+    if ' ' not in board:
+        display()
+        print("It's a draw!")
+        break
+
+    move = best_move()
+    board[move] = 'O'
+    print("Computer plays:", move + 1)
+
+    if winner() == 'O':
+        display()
+        print("Computer wins!")
+        break
+
+    if ' ' not in board:
+        display()
+        print("It's a draw!")
+        break
