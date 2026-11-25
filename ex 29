@@ -1,0 +1,19 @@
+fact(sunny).
+fact(weekend).
+
+rule(go_outside, [sunny, weekend]).
+rule(enjoy_day, [go_outside]).
+
+derive(Conclusion) :-
+    rule(Conclusion, Conditions),
+    all_known(Conditions).
+
+all_known([]).
+all_known([Condition | Rest]) :-
+    known(Condition),
+    all_known(Rest).
+
+known(Fact) :-
+    fact(Fact).
+known(Fact) :-
+    derive(Fact).
