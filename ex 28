@@ -1,0 +1,16 @@
+symptom(ravi, fever).
+symptom(ravi, cough).
+symptom(ravi, body_ache).
+
+diagnosis(Person, flu) :-
+    symptom(Person, fever),
+    symptom(Person, cough),
+    symptom(Person, body_ache).
+
+diagnosis(Person, cold) :-
+    symptom(Person, cough),
+    symptom(Person, sneezing).
+
+diagnosis(Person, allergy) :-
+    symptom(Person, sneezing),
+    symptom(Person, itchy_eyes).
