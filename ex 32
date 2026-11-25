@@ -1,0 +1,20 @@
+# Predict exam score from hours studied using simple linear regression
+
+X = [1, 2, 3, 4, 5]       # Study hours
+y = [50, 55, 65, 70, 75]  # Exam scores
+
+x_mean = sum(X) / len(X)
+y_mean = sum(y) / len(y)
+
+numerator = sum((x - x_mean) * (target - y_mean)
+                for x, target in zip(X, y))
+denominator = sum((x - x_mean) ** 2 for x in X)
+
+slope = numerator / denominator
+intercept = y_mean - slope * x_mean
+
+hours = 6
+prediction = slope * hours + intercept
+
+print(f"Regression equation: score = {slope:.2f} * hours + {intercept:.2f}")
+print(f"Predicted score for {hours} study hours: {prediction:.2f}")
