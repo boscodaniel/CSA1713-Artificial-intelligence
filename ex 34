@@ -1,0 +1,37 @@
+import tensorflow as tf
+
+# Load Fashion-MNIST dataset
+(x_train, y_train), (x_test, y_test) = (
+    tf.keras.datasets.fashion_mnist.load_data()
+)
+
+# Scale pixel values from 0–255 to 0–1
+x_train = x_train.astype("float32") / 255.0
+x_test = x_test.astype("float32") / 255.0
+
+# Create a neural network
+model = tf.keras.Sequential([
+    tf.keras.layers.Input(shape=(28, 28)),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation="relu"),
+    tf.keras.layers.Dense(10, activation="softmax")
+])
+
+# Configure and train the model
+model.compile(
+    optimizer="adam",
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+model.fit(x_train, y_train, epochs=5, validation_split=0.1)
+
+# Evaluate on test images
+test_loss, test_accuracy = model.evaluate(x_test, y_test, verbose=0)
+print(f"Test accuracy: {test_accuracy:.2%}")
+
+# Predict the class of the first test image
+probabilities = model.predict(x_test[:1], verbose=0)
+predicted_class = probabilities.argmax(axis=1)[0]
+print("Predicted class number:", predicted_class)
+print("Actual class number:", y_test[0])
