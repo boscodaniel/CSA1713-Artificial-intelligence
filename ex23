@@ -1,0 +1,25 @@
+male(john).
+male(paul).
+female(mary).
+female(anna).
+
+parent(john, paul).
+parent(mary, paul).
+parent(paul, anna).
+
+father(Father, Child) :-
+    male(Father),
+    parent(Father, Child).
+
+mother(Mother, Child) :-
+    female(Mother),
+    parent(Mother, Child).
+
+grandparent(Grandparent, Child) :-
+    parent(Grandparent, Parent),
+    parent(Parent, Child).
+
+sibling(Person1, Person2) :-
+    parent(Parent, Person1),
+    parent(Parent, Person2),
+    Person1 \= Person2.
