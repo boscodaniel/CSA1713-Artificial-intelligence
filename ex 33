@@ -1,0 +1,22 @@
+from sklearn.neighbors import KNeighborsClassifier
+
+# Features: [study hours, attendance percentage]
+X_train = [
+    [1, 50],
+    [2, 60],
+    [3, 65],
+    [6, 85],
+    [7, 90],
+    [8, 95]
+]
+
+# Labels: 0 = Fail, 1 = Pass
+y_train = [0, 0, 0, 1, 1, 1]
+
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(X_train, y_train)
+
+new_student = [[5, 80]]
+prediction = model.predict(new_student)[0]
+
+print("Prediction:", "Pass" if prediction == 1 else "Fail")
