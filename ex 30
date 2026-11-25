@@ -1,0 +1,17 @@
+fact(sunny).
+fact(weekend).
+
+rule(go_outside, [sunny, weekend]).
+rule(enjoy_day, [go_outside]).
+
+prove(Fact) :-
+    fact(Fact).
+
+prove(Goal) :-
+    rule(Goal, Conditions),
+    prove_all(Conditions).
+
+prove_all([]).
+prove_all([Condition | Rest]) :-
+    prove(Condition),
+    prove_all(Rest).
