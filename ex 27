@@ -1,0 +1,34 @@
+edge(a, b).
+edge(a, c).
+edge(b, d).
+edge(b, e).
+edge(c, f).
+edge(d, g).
+edge(e, g).
+edge(f, g).
+
+heuristic(a, 6).
+heuristic(b, 4).
+heuristic(c, 3).
+heuristic(d, 2).
+heuristic(e, 1).
+heuristic(f, 2).
+heuristic(g, 0).
+
+best_first(Start, Goal, Path) :-
+    search([Start], Goal, [], ReversePath),
+    reverse(ReversePath, Path).
+
+search([Goal | _], Goal, Visited, [Goal | Visited]).
+search([Current | Rest], Goal, Visited, Path) :-
+    findall(H-Next,
+            (edge(Current, Next), \+ member(Next, Visited)),
+            Children),
+    append(Rest, Children, OpenNodes),
+    sort(OpenNodes, Sorted),
+    remove_heuristic(Sorted, OrderedNodes),
+    search(OrderedNodes, Goal, [Current | Visited], Path).
+
+remove_heuristic([], []).
+remove_heuristic([_-Node | Rest], [Node | Nodes]) :-
+    remove_heuristic(Rest, Nodes).
