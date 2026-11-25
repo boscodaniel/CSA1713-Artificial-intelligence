@@ -1,0 +1,14 @@
+avoid(diabetes, sugar).
+avoid(diabetes, sweets).
+recommend(diabetes, vegetables).
+recommend(diabetes, whole_grains).
+
+avoid(hypertension, excess_salt).
+recommend(hypertension, fruits).
+recommend(hypertension, low_fat_food).
+
+diet(Disease, Food, avoid) :-
+    avoid(Disease, Food).
+
+diet(Disease, Food, recommend) :-
+    recommend(Disease, Food).
