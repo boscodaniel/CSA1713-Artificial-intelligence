@@ -1,0 +1,11 @@
+bird(sparrow).
+bird(pigeon).
+bird(ostrich).
+bird(penguin).
+
+can_fly(Bird) :-
+    bird(Bird),
+    \+ flightless(Bird).
+
+flightless(ostrich).
+flightless(penguin).
